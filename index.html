@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Natijalar jadvali</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --desk:#c9d3cd; --paper:#fcfdff; --ink:#1d2433; --muted:#5d6678; --rule:#cfe0f2;
+  --pen:#1c3f9e; --red:#d2453d; --hl:#fff176; --hover:rgba(255,241,118,.35); --sortbg:#eef4fc;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --desk:#151b19; --paper:#222a38; --ink:#e3e9f6; --muted:#a2adc4; --rule:#364259;
+    --pen:#90b0ff; --red:#ff857c; --hl:#7a6a00; --hover:rgba(255,230,90,.12); --sortbg:#283246;
+  }
+}
+:root[data-theme="dark"]{
+  --desk:#151b19; --paper:#222a38; --ink:#e3e9f6; --muted:#a2adc4; --rule:#364259;
+  --pen:#90b0ff; --red:#ff857c; --hl:#7a6a00; --hover:rgba(255,230,90,.12); --sortbg:#283246;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--desk);color:var(--ink);font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:18px;line-height:1.5}
+.sheet{position:relative;max-width:940px;margin:28px auto 48px;background:var(--paper);padding:34px 30px 44px 92px;box-shadow:0 1px 0 rgba(0,0,0,.08),0 10px 30px rgba(0,0,0,.16)}
+.sheet::before{content:"";position:absolute;top:0;bottom:0;left:72px;width:2px;background:var(--red);opacity:.75}
+.sheet::after{content:"";position:absolute;left:20px;top:70px;width:18px;height:18px;border-radius:50%;background:var(--desk);box-shadow:0 330px 0 var(--desk),0 660px 0 var(--desk),inset 0 1px 3px rgba(0,0,0,.35)}
+@media (max-width:640px){
+  .sheet{margin:0;padding:22px 14px 36px 52px;box-shadow:none}
+  .sheet::before{left:38px}.sheet::after{display:none}
+}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+h1{font-family:"Caveat",cursive;font-weight:700;font-size:clamp(2.8rem,8vw,4.4rem);line-height:1;margin:0;color:var(--pen)}
+.squiggle{display:block;width:min(320px,70%);height:14px;margin:2px 0 10px}
+.squiggle path{stroke:var(--red);fill:none;stroke-width:3;stroke-linecap:round}
+.lede{margin:0 0 26px;color:var(--muted);max-width:50ch}
+.theme{all:unset;cursor:pointer;color:var(--muted);text-decoration:underline;text-underline-offset:3px;font-size:.95rem;padding:6px 2px;white-space:nowrap}
+.theme:hover{color:var(--ink)}
+h2{font-family:"Caveat",cursive;font-weight:700;font-size:2rem;line-height:1.1;margin:0 0 8px;color:var(--ink)}
+section{margin-bottom:34px}
+textarea{display:block;width:100%;min-height:240px;resize:vertical;border:0;border-bottom:2px solid var(--rule);background-color:var(--paper);background-image:repeating-linear-gradient(transparent,transparent 29px,var(--rule) 29px,var(--rule) 30px);background-attachment:local;color:var(--ink);padding:0 4px;font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.92rem;line-height:30px}
+textarea:focus,input:focus,select:focus,button:focus-visible,th button:focus-visible{outline:3px solid var(--pen);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+button.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:9px 15px;border-radius:3px;font:inherit;font-size:1rem;font-weight:600;cursor:pointer}
+button.btn:hover{background:var(--sortbg)}
+button.primary{background:var(--pen);border-color:var(--pen);color:var(--paper)}
+button.primary:hover{background:var(--pen);filter:brightness(1.15)}
+.hint{color:var(--muted);font-size:.95rem;margin:12px 0 0}
+.err{color:var(--red);font-weight:600;margin:8px 0 0;min-height:1.3em}
+.field{display:block;margin-bottom:16px}
+.lbl{display:block;font-size:.95rem;font-weight:600;color:var(--muted)}
+input[type=search],select{width:100%;border:0;border-bottom:2px solid var(--ink);border-radius:0;background:transparent;color:var(--ink);padding:8px 2px;font:inherit;font-size:1.15rem}
+select option{background:var(--paper);color:var(--ink)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media (max-width:560px){.pair{grid-template-columns:1fr;gap:0}}
+.stats{display:flex;flex-wrap:wrap;gap:2px 22px;color:var(--muted);margin:4px 0 10px}
+.stats b{color:var(--ink)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:440px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--rule);white-space:nowrap}
+thead th{padding:0;border-bottom:2px solid var(--pen);font-weight:700}
+thead th.rk{padding:10px 14px;width:1%;color:var(--red)}
+th button{all:unset;box-sizing:border-box;display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;padding:10px 14px;cursor:pointer;font-weight:700;color:var(--pen)}
+th button:hover{background:var(--sortbg)}
+th.sorted,td.sorted{background:var(--sortbg)}
+tbody tr:hover td{background:var(--hover)}
+td.num{font-family:"Caveat",cursive;font-weight:700;font-size:1.55rem;line-height:1;color:var(--pen)}
+.arrow{font-size:.8rem;min-width:1em;color:var(--red)}
+.pen{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:38px;font-family:"Caveat",cursive;font-weight:700;font-size:1.6rem;line-height:1;color:var(--red)}
+.pen.top{border:2.5px solid var(--red);border-radius:52% 48% 55% 45% / 47% 56% 44% 53%;transform:rotate(-4deg)}
+mark{background:var(--hl);color:inherit;padding:0 2px;border-radius:2px}
+.empty{padding:30px;text-align:center;color:var(--muted);white-space:normal}
+@media (prefers-reduced-motion:no-preference){button,th button{transition:background .15s,filter .15s}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="top">
+    <div>
+      <h1>Natijalar jadvali</h1>
+      <svg class="squiggle" viewBox="0 0 320 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 8 C 30 2, 50 13, 80 7 S 130 2, 160 8 S 215 13, 245 6 S 295 3, 317 8"/></svg>
+      <p class="lede">Ro'yxatni vergul bilan yozing, jadval o'zi chiqadi. Ismni qidiring, ballni saralang.</p>
+    </div>
+    <button class="theme" id="theme" type="button">Tun / Kun</button>
+  </div>
+
+  <section aria-labelledby="t1">
+    <h2 id="t1">Ma'lumot</h2>
+    <textarea id="csv" spellcheck="false" aria-label="CSV matni">Nom,Toifa,Son
+Azizbek Karimov,A daraja,87
+Madina Rahimova,B daraja,92
+Jasur Toshmatov,A daraja,64
+Dilnoza Yusupova,B daraja,78
+Sardor Aliyev,A daraja,95
+Nilufar Qodirova,B daraja,71
+Bobur Hasanov,A daraja,83
+Malika Ergasheva,B daraja,88</textarea>
+    <div class="row">
+      <button class="btn primary" id="go" type="button">Jadvalga aylantirish</button>
+      <button class="btn" id="sample" type="button">Namuna</button>
+      <button class="btn" id="clear" type="button">Tozalash</button>
+      <button class="btn" id="fileBtn" type="button">Fayldan</button>
+      <input type="file" id="file" accept=".csv,.txt,text/csv" hidden>
+    </div>
+    <p class="err" id="err" role="alert"></p>
+    <p class="hint">Birinchi qator sarlavha. Har bir odam yangi qatorda, ustunlar vergul bilan ajratiladi.</p>
+  </section>
+
+  <section aria-labelledby="t2">
+    <h2 id="t2">Natijalar</h2>
+    <label class="field"><span class="lbl">Nom bo'yicha qidiruv</span>
+      <input type="search" id="q" placeholder="Masalan: Madina">
+    </label>
+    <div class="pair">
+      <label class="field"><span class="lbl">Saralash ustuni</span><select id="sortCol"></select></label>
+      <label class="field"><span class="lbl">Tartib</span>
+        <select id="sortDir">
+          <option value="asc">Kichikdan kattaga</option>
+          <option value="desc">Kattadan kichikka</option>
+        </select>
+      </label>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="scroll"><table id="tbl"></table></div>
+  </section>
+</div>
+
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var csvEl=$("csv"),tbl=$("tbl"),q=$("q"),sortCol=$("sortCol"),sortDir=$("sortDir"),err=$("err"),stats=$("stats");
+  var header=[],rows=[],numeric=[],nameCol=0,scoreCol=-1,rankMap=new Map();
+  var SAMPLE=csvEl.value;
+
+  function parse(text){
+    text=text.replace(/\r\n?/g,"\n").replace(/^\uFEFF/,"");
+    var first=text.split("\n")[0]||"",d=",";
+    if(first.indexOf(",")<0){if(first.indexOf(";")>=0)d=";";else if(first.indexOf("\t")>=0)d="\t";}
+    var out=[],row=[],cell="",inQ=false;
+    for(var i=0;i<text.length;i++){
+      var c=text[i];
+      if(inQ){ if(c==='"'){ if(text[i+1]==='"'){cell+='"';i++;} else inQ=false; } else cell+=c; }
+      else if(c==='"'){inQ=true;}
+      else if(c===d){row.push(cell.trim());cell="";}
+      else if(c==="\n"){row.push(cell.trim());out.push(row);row=[];cell="";}
+      else cell+=c;
+    }
+    row.push(cell.trim());out.push(row);
+    return out.filter(function(r){return r.some(function(x){return x!==""})});
+  }
+  function toNum(s){
+    if(s==null||s==="")return NaN;
+    var t=String(s).replace(/\s/g,"").replace(",",".");
+    return /^[-+]?\d*\.?\d+(e[-+]?\d+)?$/i.test(t)?parseFloat(t):NaN;
+  }
+
+  function load(){
+    err.textContent="";
+    var data=parse(csvEl.value);
+    if(data.length<1){header=[];rows=[];numeric=[];scoreCol=-1;fillSort();render();return;}
+    header=data[0].map(function(h,i){return h||("Ustun "+(i+1))});
+    var n=header.length,bad=0;
+    rows=data.slice(1).map(function(r){
+      if(r.length!==n)bad++;
+      var o=r.slice(0,n);while(o.length<n)o.push("");return o;
+    });
+    numeric=header.map(function(_,i){
+      var v=rows.map(function(r){return r[i]}).filter(function(x){return x!==""});
+      return v.length>0&&v.every(function(x){return !isNaN(toNum(x))});
+    });
+    var ni=header.findIndex(function(h){return /^(nom|name|ism)$/i.test(h)});
+    nameCol=ni>=0?ni:0;
+    scoreCol=numeric.indexOf(true);
+    // o'rinlar: eng katta son — 1-o'rin (teng sonlar bir xil o'rin oladi)
+    rankMap=new Map();
+    if(scoreCol>=0){
+      rows.forEach(function(r){
+        var s=toNum(r[scoreCol]);
+        if(isNaN(s))return;
+        var better=rows.filter(function(o){var t=toNum(o[scoreCol]);return !isNaN(t)&&t>s}).length;
+        rankMap.set(r,better+1);
+      });
+    }
+    if(bad)err.textContent=bad+" ta satrda ustunlar soni sarlavhadan farq qiladi, bo'sh joylar to'ldirildi.";
+    fillSort();render();
+  }
+
+  function fillSort(){
+    var prev=sortCol.value;
+    sortCol.innerHTML="";
+    var none=document.createElement("option");none.value="-1";none.textContent="Saralanmagan";sortCol.appendChild(none);
+    header.forEach(function(h,i){
+      var o=document.createElement("option");o.value=i;o.textContent=h+(numeric[i]?" (son)":"");sortCol.appendChild(o);
+    });
+    if(prev!==""&&prev!=="-1"&&+prev<header.length)sortCol.value=prev;
+    else{sortCol.value=scoreCol>=0?String(scoreCol):"-1";if(scoreCol>=0)sortDir.value="desc";}
+  }
+
+  function highlight(td,text,term){
+    td.textContent="";
+    if(!term){td.textContent=text;return;}
+    var low=text.toLowerCase(),t=term.toLowerCase(),i=0,j;
+    while((j=low.indexOf(t,i))>=0){
+      td.appendChild(document.createTextNode(text.slice(i,j)));
+      var m=document.createElement("mark");m.textContent=text.slice(j,j+t.length);td.appendChild(m);
+      i=j+t.length;
+    }
+    td.appendChild(document.createTextNode(text.slice(i)));
+  }
+
+  function render(){
+    tbl.innerHTML="";stats.innerHTML="";
+    if(!header.length){tbl.innerHTML='<tbody><tr><td class="empty">CSV matnini chap tomondagi maydonga yozing.</td></tr></tbody>';return;}
+    var term=q.value.trim(),col=+sortCol.value,dir=sortDir.value==="desc"?-1:1,hasRank=scoreCol>=0;
+    var list=rows.filter(function(r){return !term||r[nameCol].toLowerCase().indexOf(term.toLowerCase())>=0});
+    if(col>=0){
+      var isN=numeric[col];
+      list=list.slice().sort(function(a,b){
+        var x=a[col],y=b[col];
+        if(isN){
+          var nx=toNum(x),ny=toNum(y);
+          if(isNaN(nx)&&isNaN(ny))return 0;
+          if(isNaN(nx))return 1;if(isNaN(ny))return -1;
+          return (nx-ny)*dir;
+        }
+        return x.localeCompare(y,"uz",{sensitivity:"base",numeric:true})*dir;
+      });
+    }
+    var thead=document.createElement("thead"),tr=document.createElement("tr");
+    if(hasRank){var rk=document.createElement("th");rk.className="rk";rk.textContent="O'rin";tr.appendChild(rk);}
+    header.forEach(function(h,i){
+      var th=document.createElement("th");if(i===col)th.className="sorted";
+      th.setAttribute("aria-sort",i===col?(dir===1?"ascending":"descending"):"none");
+      var b=document.createElement("button");b.type="button";b.title="Shu ustun bo'yicha saralash";
+      var s=document.createElement("span");s.textContent=h;
+      var a=document.createElement("span");a.className="arrow";a.textContent=i===col?(dir===1?"▲":"▼"):"";
+      b.appendChild(s);b.appendChild(a);
+      b.onclick=function(){
+        if(+sortCol.value===i)sortDir.value=sortDir.value==="asc"?"desc":"asc";
+        else{sortCol.value=String(i);sortDir.value=numeric[i]?"desc":"asc";}
+        render();
+      };
+      th.appendChild(b);tr.appendChild(th);
+    });
+    thead.appendChild(tr);tbl.appendChild(thead);
+    var tb=document.createElement("tbody");
+    if(!list.length){
+      var r0=document.createElement("tr"),c0=document.createElement("td");
+      c0.colSpan=header.length+(hasRank?1:0);c0.className="empty";c0.textContent='"'+term+'" bo\'yicha hech kim topilmadi.';
+      r0.appendChild(c0);tb.appendChild(r0);
+    }
+    list.forEach(function(r){
+      var tr=document.createElement("tr");
+      if(hasRank){
+        var td=document.createElement("td"),rank=rankMap.get(r),m=document.createElement("span");
+        m.className="pen"+(rank&&rank<=3?" top":"");m.textContent=rank||"–";
+        td.appendChild(m);tr.appendChild(td);
+      }
+      r.forEach(function(v,i){
+        var td=document.createElement("td");
+        if(numeric[i])td.className="num";
+        if(i===col)td.className+=" sorted";
+        if(i===nameCol)highlight(td,v,term);else td.textContent=v;
+        tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+    tbl.appendChild(tb);
+    var s='<span><b>'+list.length+'</b> / '+rows.length+' ta qator</span>';
+    if(scoreCol>=0){
+      var sum=list.reduce(function(a,r){var n=toNum(r[scoreCol]);return a+(isNaN(n)?0:n)},0);
+      s+='<span>'+header[scoreCol].replace(/</g,"&lt;")+' yig\'indisi: <b>'+(Math.round(sum*100)/100).toLocaleString("ru-RU")+'</b></span>';
+    }
+    stats.innerHTML=s;
+  }
+
+  $("go").onclick=load;
+  csvEl.addEventListener("input",load);
+  q.addEventListener("input",render);
+  sortCol.addEventListener("change",render);
+  sortDir.addEventListener("change",render);
+  $("sample").onclick=function(){csvEl.value=SAMPLE;q.value="";load();};
+  $("clear").onclick=function(){csvEl.value="";q.value="";load();csvEl.focus();};
+  $("fileBtn").onclick=function(){$("file").click()};
+  $("file").onchange=function(e){
+    var f=e.target.files[0];if(!f)return;
+    var rd=new FileReader();rd.onload=function(){csvEl.value=rd.result;load();};rd.readAsText(f);
+  };
+  $("theme").onclick=function(){
+    var root=document.documentElement;
+    var dark=root.getAttribute("data-theme")==="dark"||(!root.getAttribute("data-theme")&&matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme",dark?"light":"dark");
+  };
+  load();
+})();
+</script>
+</body>
+</html>
